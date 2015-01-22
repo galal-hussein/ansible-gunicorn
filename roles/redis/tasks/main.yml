@@ -1,0 +1,28 @@
+---
+
+- name: Install Redis Server
+  apt:
+        pkg=redis-server
+        state=installed
+  register: redisinstalled
+  notify:
+  - Start Redis
+
+- name: Edit Redis Configuration
+  when: redisinstalled|success
+  lineinfile:
+         dest=/etc/redis/redis.conf 
+        state=present regexp="^#?bind" 
+        line="#bind 127.0.0.1"
+  register: redisconfig
+  notify:
+  - Restart Redis
+
+- name: Add Redis Support For Flask
+  pip:
+        chdir={{ python_app_path }}
+        name={{ item }}
+        virtualenv=venv
+  with_items:
+        - redis
+        - flask-redis

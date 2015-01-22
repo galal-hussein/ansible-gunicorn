@@ -1,0 +1,45 @@
+---
+
+- name: Install Dependencies
+  apt:
+        pkg={{ item }}
+        state=installed
+  with_items:
+        - git-core
+        - curl
+        - python-pip
+        - build-essential
+        - python-software-properties
+        - python-dev
+        - python-setuptools
+        - libmysqlclient-dev
+        - python-virtualenv
+  register: dep_installed
+   
+
+- name: GIT Flask Application
+  git:
+        repo={{ python_flask_git_repo }}
+        dest={{ python_app_path }}
+  when: dep_installed | success
+
+- name: Install The Requirements Inside VENV
+  pip: 
+        chdir={{ python_app_path }}
+        virtualenv=venv
+        virtualenv_command=virtualenv
+        requirements={{ python_req_file }}
+  register: req_installed
+
+- name: Install Template Setup
+  template:
+        src=flask_setting_template.j2
+        dest={{ python_app_path }}/{{ python_flask_setting_path }}
+
+#- name: Run The Migration script
+#  django_manage:
+#        command=migrate
+#        app_path={{ python_app_path }}
+#        settings={{ python_flask_setting_path }}
+#        virtualenv=venv
+

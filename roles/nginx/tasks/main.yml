@@ -1,0 +1,50 @@
+---
+
+- name: Add Nginx Repository
+  apt_repository:
+        repo='ppa:nginx/stable'
+        state=present
+  register: nginxrepo
+
+- name: Install Nginx
+  apt:
+        pkg=nginx
+        state=installed
+        update_cache=true
+  when: nginxrepo|success
+  register: nginxinstalled
+  notify:
+  - Start Nginx
+
+- name: Create Web Root
+  when: nginxinstalled|success
+  file: 
+        dest={{ nginx_document_root }}
+        mode=755
+        state=directory
+        owner=www-data
+        group=www-data
+
+- name: Remove Default Site
+  when: nginxinstalled|success
+  file: 
+        dest=/etc/nginx/sites-enabled/default
+        state=absent
+
+- name: Add Site Configuration
+  when: nginxinstalled|success
+  template: 
+        src=site.conf
+        dest=/etc/nginx/sites-available/{{ nginx_domain_name }}.conf
+        owner=root
+        group=root
+  register: addsite
+
+- name: Enable Site Configuration
+  when: addsite|success
+  file: 
+        src=/etc/nginx/sites-available/{{ nginx_domain_name }}.conf
+        dest=/etc/nginx/sites-enabled/{{ nginx_domain_name }}.conf state=link
+  notify:
+  - Reload Nginx
+

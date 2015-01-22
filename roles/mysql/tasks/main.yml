@@ -1,0 +1,33 @@
+---
+
+- name: Install MySQL Server
+  apt: 
+        name={{ item }}
+        state=installed
+  with_items:
+        - mysql-server
+        - mysql-client
+        - python-mysqldb
+
+- name: Restart Mysql Service
+  service: name=mysql state=restarted
+
+- name: Create Admin user
+  mysql_user:
+        name={{ mysql_adminuser }}
+        password={{ mysql_adminpass }}
+        priv=*.*:ALL
+        state=present
+
+- name: Create Application Database
+  mysql_db:
+        name={{ mysql_db }}
+        state=present
+
+- name: Create Application DB User
+  mysql_user:
+        name={{ mysql_dbuser }}
+        password={{ mysql_dbpass }}
+        host=%
+        priv={{ mysql_db }}.*:ALL
+        state=present

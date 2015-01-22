@@ -1,0 +1,5 @@
+---
+
+- name: Start Gunicorn
+  command: venv/bin/gunicorn -c gunicorn.py manage:app
+           chdir={{ gunicorn_app_dir }}
