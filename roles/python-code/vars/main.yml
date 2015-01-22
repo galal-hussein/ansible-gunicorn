@@ -1,9 +1,0 @@
----
-python_flask_git_repo: https://github.com/melsayedlab/daaz.git
-python_req_file: requirements.txt
-python_flask_setting_path: config.py
-python_app_path: /var/www/html/app
-python_flask_db: d44z
-python_flask_dbuser: daazuser
-python_flask_dbpass: daazpass
-

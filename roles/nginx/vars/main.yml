@@ -1,4 +1,0 @@
----
-nginx_document_root: /var/www/html/app
-nginx_domain_name: app.com
-nginx_gunicorn_socket: 127.0.0.1:8000
