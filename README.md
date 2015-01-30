@@ -8,6 +8,7 @@ This playbook builds an environment to run a python Flask application, it consis
 - Redis
 - Virtualenv
 - Gunicorn
+- Supervisor
 - Nginx
 
 ## Dependencies
