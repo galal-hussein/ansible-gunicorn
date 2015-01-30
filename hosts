@@ -4,8 +4,12 @@
 [mysql]
 10.0.33.11
 
+[python-code]
+10.0.33.11
+
 [gunicorn]
 10.0.33.11
 
-[python-code]
+[supervisor]
 10.0.33.11
+
